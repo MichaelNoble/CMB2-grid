@@ -39,15 +39,20 @@ if ( ! class_exists( '\Cmb2Grid\Grid\Group\GroupRow' ) ) {
 		  } */
 
 		protected function closeGroupRow( \CMB2_Field $field, $fieldID ) {
-			if ( !empty( $fieldID['after_row'] ) ) {
-				@$field->args['fields'][ $fieldID ]['after_row'] .= '</div>';
-			}
+			if ( !isset( $field->args['fields'][ $fieldID ]['after_row'] ) ) 
+					\Cmb2Grid\Cmb2\Utils::initializeFieldArg( $field, 'after_row' );
+			
+			@$field->args['fields'][ $fieldID ]['after_row'] .= '</div>';
+			
 		}
 
 		protected function openGroupRow( \CMB2_Field $field, $fieldID ) {
-			if ( !empty( $fieldID['before_row'] ) ) {
-				@$field->args['fields'][ $fieldID ]['before_row'] .= '<div class="row cmb2GridRow">';
-			}
+
+			if ( !isset( $field->args['fields'][ $fieldID ]['before_row'] ) ) 
+					\Cmb2Grid\Cmb2\Utils::initializeFieldArg( $field, 'before_row' );
+			
+			@$field->args['fields'][ $fieldID ]['before_row'] .= '<div class="row cmb2GridRow">';
+		
 		}
 
 		protected function handleRow() {

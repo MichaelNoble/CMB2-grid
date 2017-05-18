@@ -25,19 +25,28 @@ if ( ! class_exists( '\Cmb2Grid\Grid\Group\GroupColumn' ) ) {
 			$columnClass = $this->getColumnClass();
 			$field		 = $this->getField();
 			$fieldID	 = $this->getFieldId();
+			
+			if ( ! isset( $field->args['fields'][ $fieldID ]['before_row'] ) ) $field->args['fields'][ $fieldID ]['before_row'] = '';
+			if ( ! isset( $field->args['fields'][ $fieldID ]['after_row'] ) ) $field->args['fields'][ $fieldID ]['after_row'] = '';
 
-			//\Cmb2Grid\Cmb2\Utils::initializeFieldArg( $field->args['fields'][$fieldID], 'before_row' );
-			//\Cmb2Grid\Cmb2\Utils::initializeFieldArg( $field->args['fields'][$fieldID], 'after_row' );
-
-			if ( ! empty( $fieldID['before_row'] ) && ! empty( $fieldID['after_row'] ) ) {
+			// if ( ! empty( $fieldID['before_row'] ) && ! empty( $fieldID['after_row'] ) ) {
 				$field->args['fields'][ $fieldID ]['before_row'] .= "<div class=\"{$columnClass}\">";
 				$field->args['fields'][ $fieldID ]['after_row']  .= '</div>';
-			}
+			// }
 		}
 
 		public function __construct( $field, \Cmb2Grid\Grid\Cmb2Grid $grid ) {
-			$this->setParentFieldId( $field[0] );
-			$this->setFieldId( $field[1] );
+
+			if ( is_string($field[0]) )	{
+				$this->setParentFieldId( $field[0] );
+				$this->setFieldId( $field[1] );
+			} else {
+				$this->setParentFieldId( $field[0][0] );
+				$this->setFieldId( $field[0][1] );
+				if ( isset( $field['class'] ) ) {
+				  $this->setColumnClass( $field['class'] );
+				}
+			}	
 			$field = cmb2_get_field( $grid->getCmb2Obj(), $this->getParentFieldId() );
 			$this->setField( $field );
 
